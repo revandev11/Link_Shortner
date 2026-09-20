@@ -1,7 +1,6 @@
 # Infra — Mikroservis Layihəsi
 
-Bu repo layihənin infrastruktur mərkəzidir: bütün servisləri lokal olaraq bir yerdə ayağa qaldırmaq üçün `docker-compose.yml` və CI/CD konfiqurasiyalarını saxlayır.
-
+Bu lahiye mikroservis texnelogiyalarını tədbiq etmək üçün yaranıb.
 ## Arxitektura
 
 Layihə 4 servisdən ibarətdir:
@@ -47,13 +46,6 @@ Bu vacibdir, çünki `docker-compose.yml`-də hər servisin build yolu (`../url-
 ### Addımlar
 
 ```bash
-mkdir projects && cd projects
-
-git clone https://github.com/<revandev11>/infra.git
-git clone https://github.com/<revandev11>/url-service.git
-git clone https://github.com/<revandev11>/analytics-service.git
-git clone https://github.com/<revandev11>/api-gateway.git
-
 cd infra
 docker compose up --build
 ```
