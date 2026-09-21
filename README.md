@@ -68,6 +68,15 @@ docker compose up --build
 | RabbitMQ (AMQP) | `5672` |
 | RabbitMQ Management UI | `15672` |
 
+### Swagger API sənədləşməsi
+
+Servislər işə düşdükdən sonra interaktiv API sənədləşməsinə bu ünvanlardan baxa bilərsiniz:
+
+| Servis | Swagger UI | OpenAPI JSON |
+|---|---|---|
+| `url-service` | `http://localhost:8081/swagger-ui.html` | `http://localhost:8081/v3/api-docs` |
+| `analytics-service` | `http://localhost:8082/swagger-ui.html` | `http://localhost:8082/v3/api-docs` |
+
 ## Texnologiyalar
 
 - Java / Spring Boot
