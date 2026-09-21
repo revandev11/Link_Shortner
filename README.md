@@ -46,7 +46,7 @@ Bu vacibdir, çünki `docker-compose.yml`-də hər servisin build yolu (`../url-
 ### Addımlar
 
 ```bash
-cd infra
+cd Link_Shortner
 docker compose up --build
 ```
 
