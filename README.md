@@ -49,8 +49,14 @@ Nümunə cavab:
 ```
 
 ## Texnologiyalar
-
-- Vanilla HTML, CSS və JavaScript
 - Java 17
+- RabbitMq
+- Api-Gateway
 - Docker
+- SpringBoot
+- Swagger UI
+- MySql
 - Render
+- Vanilla HTML
+- CSS
+- JavaScript
