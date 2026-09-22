@@ -3,7 +3,6 @@ package com.example.urlservice.controller;
 import com.example.urlservice.dto.ShortenRequest;
 import com.example.urlservice.dto.ShortenResponse;
 import com.example.urlservice.service.UrlService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,18 +24,17 @@ public class UrlController {
 
     private final UrlService urlService;
 
+    @Value("${app.public-base-url}")
+    private String publicBaseUrl;
+
     @PostMapping("/api/urls")
     @Operation(summary = "URL qısalt", description = "Verilən tam URL üçün unikal qısa kod yaradır.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Qısa URL uğurla yaradıldı"),
             @ApiResponse(responseCode = "400", description = "URL etibarsızdır")
     })
-    public ResponseEntity<ShortenResponse> shorten(@Valid @RequestBody ShortenRequest request,
-                                                     HttpServletRequest httpRequest) {
-        String baseUrl = httpRequest.getScheme() + "://" + httpRequest.getServerName()
-                + ":" + httpRequest.getServerPort();
-
-        ShortenResponse response = urlService.shorten(request.url(), baseUrl);
+    public ResponseEntity<ShortenResponse> shorten(@Valid @RequestBody ShortenRequest request) {
+        ShortenResponse response = urlService.shorten(request.url(), publicBaseUrl);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

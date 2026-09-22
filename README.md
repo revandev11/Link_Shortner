@@ -59,6 +59,11 @@ docker compose up --build
 | MySQL | `3306` |
 | RabbitMQ (AMQP) | `5672` |
 | RabbitMQ Management UI | `15672` |
+| Frontend (URL Qısaldıcı) | `3000` |
+
+### Frontend
+
+Sistem işə düşəndən sonra URL qısaltma interfeysi `http://localhost:3000` ünvanında açılır. Frontend API sorğularını Nginx vasitəsilə API Gateway-ə yönləndirir; URL yaratma və statistika birbaşa interfeysdən istifadə oluna bilər.
 
 ### Swagger API sənədləşməsi
 

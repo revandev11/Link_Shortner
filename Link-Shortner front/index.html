@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Shorten long URLs with ease." />
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="card" aria-labelledby="page-title">
+        <div class="heading">
+          <span class="eyebrow">Quick and simple</span>
+          <h1 id="page-title">URL Shortener</h1>
+          <p>Enter a long link and get a short URL ready to share.</p>
+        </div>
+
+        <form id="shorten-form" novalidate>
+          <label for="url-input">Long URL</label>
+          <div class="form-row">
+            <input
+              id="url-input"
+              name="url"
+              type="url"
+              placeholder="https://example.com/a-very-long-link"
+              autocomplete="url"
+              required
+            />
+            <button id="shorten-button" type="submit">Shorten</button>
+          </div>
+        </form>
+
+        <p id="error-message" class="message error" role="alert" hidden></p>
+
+        <section id="result" class="result" aria-live="polite" hidden>
+          <p class="result-label">Your short link is ready</p>
+          <div class="short-link-row">
+            <a id="short-link" href="#" target="_blank" rel="noopener noreferrer"></a>
+            <button id="copy-button" class="secondary-button" type="button">Copy</button>
+          </div>
+          <button id="stats-button" class="stats-button" type="button">View statistics</button>
+
+          <div id="statistics" class="statistics" hidden>
+            <div>
+              <span>Total clicks</span>
+              <strong id="total-clicks">0</strong>
+            </div>
+            <div>
+              <span>Created events</span>
+              <strong id="created-events">0</strong>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

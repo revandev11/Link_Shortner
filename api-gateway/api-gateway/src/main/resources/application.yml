@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -7,6 +7,14 @@ spring:
 
   cloud:
     gateway:
+      # Frontend birbaşa (file:// və ya başqa origin) açıldıqda CORS preflight-ı qəbul et.
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       routes:
 
         # POST /api/urls -> url-service (yeni link qısaltmaq üçün)
@@ -14,6 +22,12 @@ spring:
           uri: lb://url-service
           predicates:
             - Path=/api/urls/**
+
+        # GET /api/analytics/{shortCode} -> analytics-service
+        - id: analytics-service-api
+          uri: lb://analytics-service
+          predicates:
+            - Path=/api/analytics/**
 
         # GET /{shortCode} -> url-service (redirect üçün)
         - id: url-service-redirect
@@ -24,7 +38,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}/eureka
   instance:
     prefer-ip-address: true
 

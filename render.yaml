@@ -1,0 +1,135 @@
+services:
+  - type: pserv
+    name: url-shortener-mysql
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./infra
+    dockerfilePath: ./infra/mysql.Dockerfile
+    disk:
+      name: mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+    envVars:
+      - fromGroup: url-shortener-shared-secrets
+      - key: PORT
+        value: "3306"
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+      - key: MYSQL_DATABASE
+        value: url_service_db
+
+  - type: pserv
+    name: url-shortener-rabbitmq
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./infra
+    dockerfilePath: ./infra/rabbitmq.Dockerfile
+    disk:
+      name: rabbitmq-data
+      mountPath: /var/lib/rabbitmq
+      sizeGB: 1
+    envVars:
+      - fromGroup: url-shortener-shared-secrets
+      - key: PORT
+        value: "5672"
+
+  - type: pserv
+    name: url-shortener-discovery
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./api-gateway
+    dockerfilePath: ./api-gateway/discovery-service/Dockerfile
+    envVars:
+      - key: PORT
+        value: "8761"
+
+  - type: pserv
+    name: url-shortener-url-service
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./url-service/url-service
+    dockerfilePath: ./url-service/url-service/Dockerfile
+    envVars:
+      - fromGroup: url-shortener-shared-secrets
+      - key: PORT
+        value: "8081"
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-mysql
+          property: host
+      - key: EUREKA_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-discovery
+          property: host
+      - key: RABBITMQ_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-rabbitmq
+          property: host
+
+  - type: pserv
+    name: url-shortener-analytics
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./analytics-service/analytics-service
+    dockerfilePath: ./analytics-service/analytics-service/Dockerfile
+    envVars:
+      - fromGroup: url-shortener-shared-secrets
+      - key: PORT
+        value: "8082"
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-mysql
+          property: host
+      - key: EUREKA_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-discovery
+          property: host
+      - key: RABBITMQ_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-rabbitmq
+          property: host
+
+  - type: web
+    name: url-shortener-api
+    runtime: docker
+    plan: 0.5c-512mb
+    dockerContext: ./api-gateway
+    dockerfilePath: ./api-gateway/api-gateway/Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: EUREKA_HOST
+        fromService:
+          type: pserv
+          name: url-shortener-discovery
+          property: host
+
+  - type: web
+    name: url-shortener-frontend
+    runtime: docker
+    plan: free
+    dockerContext: ./Link-Shortner front
+    dockerfilePath: ./Link-Shortner front/Dockerfile
+    envVars:
+      - key: API_GATEWAY_HOSTPORT
+        fromService:
+          type: web
+          name: url-shortener-api
+          property: hostport
+
+envVarGroups:
+  - name: url-shortener-shared-secrets
+    envVars:
+      - key: MYSQL_USER
+        value: app
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: RABBITMQ_USER
+        value: app
+      - key: RABBITMQ_PASSWORD
+        generateValue: true

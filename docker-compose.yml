@@ -66,6 +66,22 @@ services:
     networks:
       - backend
 
+  frontend:
+    build:
+      context: ./Link-Shortner front
+      dockerfile: Dockerfile
+    container_name: url-shortener-frontend
+    restart: unless-stopped
+    depends_on:
+      - api-gateway
+    environment:
+      PORT: 80
+      API_GATEWAY_HOSTPORT: api-gateway:8080
+    ports:
+      - "3000:80"
+    networks:
+      - backend
+
   # ---------------------------
   # Application services
   # ---------------------------
@@ -88,6 +104,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: app
       SPRING_RABBITMQ_PASSWORD: app
+      PUBLIC_BASE_URL: http://localhost:8080
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
     ports:
       - "8081:8081"
