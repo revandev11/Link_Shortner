@@ -1,18 +1,26 @@
 # URL Qısaldıcı
 
-Uzun URL-ləri qısaldan, qısa linkləri yönləndirən və sadə klik statistikasını göstərən veb tətbiq.
+Uzun URL-ləri qısaldan, qısa linkləri yönləndirən və istifadə statistikasını göstərən veb tətbiq.
 
 ## Canlı demo
 
+Layihə Render üzərində deploy olunub:
+
 [https://link-shortner-ku3n.onrender.com/](https://link-shortner-ku3n.onrender.com/)
+
+## Frontend və backend əlaqəsi
+
+Frontend Vanilla HTML, CSS və JavaScript ilə hazırlanıb. İstifadəçi URL daxil etdikdə frontend `POST /api/urls` sorğusu göndərir, backend qısa kod yaradıb qısa linki geri qaytarır. “Statistikaya bax” düyməsi isə `GET /api/analytics/{shortCode}` endpointi vasitəsilə klik və yaradılma saylarını alır.
+
+Frontend və backend eyni Render servisində çalışdığı üçün API sorğuları eyni domen üzərindən `/api` yolu ilə göndərilir. Bu yanaşma əlavə CORS konfiqurasiyasına ehtiyacı aradan qaldırır. Yaradılan qısa link açıldıqda backend istifadəçini orijinal URL-ə yönləndirir və klik statistikasını yeniləyir.
 
 ## İmkanlar
 
 - Tam URL-dən yeddi simvollu qısa kod yaradır.
-- Qısa link açıldıqda orijinal ünvanına yönləndirir.
+- Qısa link açıldıqda orijinal ünvana yönləndirir.
 - Yaradılma hadisəsi və klik sayını göstərir.
 - Linki bir kliklə clipboard-a köçürür.
-- Mobil ekranlara uyğun sadə Vanilla HTML/CSS/JavaScript interfeysi təqdim edir.
+- Mobil ekranlara uyğun sadə interfeys təqdim edir.
 
 ## API
 
@@ -40,33 +48,9 @@ Nümunə cavab:
 }
 ```
 
-## Pulsuz Render deploy-u
-
-Canlı versiya Render-in Free Web Service planında tək Docker konteyneri kimi çalışır. `free-render/UrlShortenerServer.java` frontend-i, API-ni, yönləndirməni və statistikanı eyni prosesdə təqdim edir. Bu yanaşma ayrıca MySQL, RabbitMQ və Eureka servislərinə ehtiyacı aradan qaldırır.
-
-Render deploy parametrləri:
-
-- Runtime: `Docker`
-- Dockerfile: `free-render/Dockerfile.render`
-- Docker build context: `.`
-- Plan: `Free`
-
-> Qeyd: Pulsuz versiya məlumatları yaddaşda saxlayır. Render servisi yenidən başladıqda və ya free instansiya yenidən yaradıldıqda mövcud qısa linklər və statistika sıfırlana bilər.
-
-## Lokal işə salma
-
-Tələblər: Docker Desktop.
-
-```bash
-docker build -t url-shortener-free -f free-render/Dockerfile.render .
-docker run --rm -p 8080:8080 -e PORT=8080 url-shortener-free
-```
-
-Sonra [http://localhost:8080](http://localhost:8080) ünvanını açın.
-
 ## Texnologiyalar
 
 - Vanilla HTML, CSS və JavaScript
-- Java 17 (`HttpServer`)
+- Java 17
 - Docker
-- Render Free Web Service
+- Render
